@@ -17,12 +17,16 @@ namespace KillUtilite
             var nameProcess = args[0];
             var admissibleLifeTime = int.Parse(args[1]);
             var frequency = int.Parse(args[2]);
-            var c = DateTime.Now.Millisecond;
+            var admissible = new TimeSpan(0, admissibleLifeTime, 0);
             while (true)
             {
+
                 foreach (var process in Process.GetProcessesByName(nameProcess))
                 {
-                    if ((DateTime.Now.Millisecond - process.StartTime.Millisecond) > admissibleLifeTime * 60000)
+                    var startTime = process.StartTime;
+                    var timeNow = DateTime.Now;
+                    var processLifeTime = timeNow.Subtract(startTime);
+                    if (processLifeTime > admissible)
                     {
                         process.Kill();
                         break;
