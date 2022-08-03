@@ -16,28 +16,44 @@ namespace KillUtilite
         {
             Console.WriteLine("Unhandled Exception: " + Environment.NewLine + e.ExceptionObject.ToString());
         }
+
+
         static void Main(string[] args)
         {
-            
+
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             var nameProcess = args[0];
             var admissibleLifeTime = int.Parse(args[1]);
             var frequency = int.Parse(args[2]);
             var admissible = new TimeSpan(0, admissibleLifeTime, 0);
-
-            foreach (var process in Process.GetProcessesByName(nameProcess))
+            var processes = Process.GetProcessesByName(nameProcess);
+            while (true)
             {
-                var startTime = process.StartTime;
-                var timeNow = DateTime.Now;
-                var processLifeTime = timeNow.Subtract(startTime);
-                if (processLifeTime > admissible)
+                if (processes.Count() == 0)
                 {
-                    process.Kill();
+                    Console.WriteLine($"Process {nameProcess} not found");
+                    Console.ReadLine();
                     break;
                 }
-            }
-            Thread.Sleep(frequency * 60000);
 
+                foreach (var process in processes)
+                {
+                    var startTime = process.StartTime;
+                    var timeNow = DateTime.Now;
+                    var processLifeTime = timeNow.Subtract(startTime);
+                    if (processLifeTime > admissible)
+                    {
+                        process.Kill();
+                        Console.WriteLine($"Process {nameProcess} completed.");
+                        Console.ReadLine();
+                        break;
+                    }
+                }
+
+                Thread.Sleep(frequency * 60000);
+            }
+
+            
         }
     }
 
