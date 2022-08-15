@@ -32,12 +32,16 @@ namespace KillUtilite
                 if (processes.Count() == 0)
                 {
                     Console.WriteLine($"Process {nameProcess} not found");
-                    Console.ReadLine();
                     break;
                 }
 
                 foreach (var process in processes)
                 {
+                    if (process.HasExited)
+                    {
+                        Console.WriteLine($"Process {nameProcess} has completed before");
+                        return;
+                    }
                     var startTime = process.StartTime;
                     var timeNow = DateTime.Now;
                     var processLifeTime = timeNow.Subtract(startTime);
@@ -45,8 +49,11 @@ namespace KillUtilite
                     {
                         process.Kill();
                         Console.WriteLine($"Process {nameProcess} completed.");
-                        Console.ReadLine();
                         break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Process {nameProcess} is running. Operating time below allowable.");
                     }
                 }
 
