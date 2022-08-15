@@ -48,7 +48,7 @@ namespace KillUtilite
                     if (processLifeTime > admissible)
                     {
                         process.Kill();
-                        Console.WriteLine($"Process {nameProcess} completed.");
+                        Console.WriteLine($"Process {nameProcess} was successfully completed by the program.");
                         break;
                     }
                     else
